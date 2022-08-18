@@ -30,7 +30,9 @@ clc
 % NOTE: this assumes folder is in the same directory as code file.
 % Otherwise, need to ammend filepath description to map to the correct 
 % directory containing the folder 
-folder_name = 'analysis_27June'; % INPUT FOLDER NAME
+folder_name = fullfile('../',...
+    '1. Fluorescent nanoparticles/',...
+    '17-Aug_5channel_firsttest/'); % INPUT FOLDER NAME
 % count number of images to analyse
 a = dir([folder_name '/*jpg']); 
 N = length(a); % total number of files (including ref)
@@ -38,7 +40,8 @@ N = length(a); % total number of files (including ref)
 % define image crop size
 % syntax: [x-coord of bottom left point, y-coord of bottom left point,
 % width, height]
-crop_size = [1764 798 1176 1506]; % CHANGE CROP SIZE
+crop_size = [120 942 3752 984]; % CHANGE CROP SIZE
+% crop_size = [0 0 4000 3000];
 
 % load reference image (t=0)
 ref_name = a(1).name; % assume this is always the first image in the folder
@@ -48,9 +51,15 @@ ref = double(im2gray(ref)); % convert to grayscale
 
 sum_ref = sum(ref, "all"); % get sum of pixel intensities 
 
+% -- for hour:min:sec format
+% t_ref = str2double(ref_name(9:10))*3600 +...
+%     str2double(ref_name(11:12))*60 +...
+%     str2double(ref_name(13:14)); % get time of ref image taken (in secs)
+
+% -- for hour:min format
 t_ref = str2double(ref_name(9:10))*3600 +...
-    str2double(ref_name(11:12))*60 +...
-    str2double(ref_name(13:14)); % get time of ref image taken (in secs)
+    str2double(ref_name(11:12))*60; % get time of ref image taken (in secs)
+
 
 % for sense check
 fac_array = zeros(1,N);
@@ -85,9 +94,15 @@ for i = 1:N
     avg_norm_img = mean(norm_img); % get avg value of each column 
 
     % find elapsed time of current image
+    % -- for hour:min:sec format
+%     t_img = str2double(file(9:10))*3600 +...
+%             str2double(file(11:12))*60 +...
+%             str2double(file(13:14)); % get time of image taken (in seconds)
+    
+    % -- for hour:min format
     t_img = str2double(file(9:10))*3600 +...
-        str2double(file(11:12))*60 +...
-        str2double(file(13:14)); % get time of image taken (in seconds)
+            str2double(file(11:12))*60; % get time of ref image taken (in secs)
+    
     % find experiment elapsed time 
     t = t_img - t_ref; 
     
@@ -99,7 +114,7 @@ end
 
 % plot features
 axis tight
-legend % lengend represents the elapsed time
+legend % legend represents the elapsed time
 xlabel("distance in x-direction"); ylabel("normalised intensity"); 
 
 

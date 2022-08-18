@@ -33,7 +33,9 @@ clc
 % NOTE: this assumes folder is in the same directory as code file.
 % Otherwise, need to ammend filepath description to map to the correct 
 % directory containing the folder 
-folder_name = 'analysis_29June'; % INPUT FOLDER NAME
+folder_name = fullfile('../',...
+    '1. Fluorescent nanoparticles/',...
+    '17-Aug_5channel_firsttest'); % INPUT FOLDER NAME
 % count number of images to analyse
 a = dir([folder_name '/*jpg']); 
 N = length(a); % total number of files (including ref)
@@ -41,7 +43,7 @@ N = length(a); % total number of files (including ref)
 % define image crop size
 % syntax: [x-coord of bottom left point, y-coord of bottom left point,
 % width, height]
-crop_size = [1764 798 1176 1506]; % CHANGE CROP SIZE
+crop_size = [120 942 3752 984]; % CHANGE CROP SIZE
 
 % load reference image (t=0)
 ref_name = a(1).name; % assume this is always the first image in the folder
@@ -51,13 +53,21 @@ ref = double(im2gray(ref)); % convert to grayscale
 
 sum_ref = sum(ref, "all"); % get sum of pixel intensities
 
-t_ref = str2double(ref_name(9:10))*3600 +...
-    str2double(ref_name(11:12))*60 +...
-    str2double(ref_name(13:14)); % get time of ref image taken (in secs)
+% -- for hour:min:sec format
+% t_ref = str2double(ref_name(9:10))*3600 +...
+%     str2double(ref_name(11:12))*60 +...
+%     str2double(ref_name(13:14)); % get time of ref image taken (in secs)
 
-% for sense check
+% -- for hour:min format
+t_ref = str2double(ref_name(9:10))*3600 +...
+    str2double(ref_name(11:12))*60; % get time of ref image taken (in secs)
+
+% create empty arrays
 fac_array = zeros(1,N);
 chck_array = zeros(1,N);
+
+t_arr = zeros(1,N);
+grad_arr = zeros(1,N);
 
 % load images to analyse
 for i = 1:N
@@ -89,29 +99,39 @@ for i = 1:N
 
     
     % find gradient
-    grad_area = 400:700; % INPUT DISTANCE BET 2 POINTS IN X-DIRECTION 
+    grad_area = 500:3000; % INPUT DISTANCE BET 2 POINTS IN X-DIRECTION 
     y = avg_norm_img(grad_area);
-    x = 1:length(y);
+    x = [1:length(y)].* 1.59e-4; % convert pix to mm 
+    % Shared Nikon camera, x10: 1.59e-4
+    % Alvium U-240, x10: 3.6e-4
     p = polyfit(x,y,1); %linear fit
     grad = p(1); % gradient
     
     
     % find elapsed time of current image
+    % -- for hour:min:sec format
+%     t_img = str2double(file(9:10))*3600 +...
+%             str2double(file(11:12))*60 +...
+%             str2double(file(13:14)); % get time of image taken (in seconds)
+    
+    % -- for hour:min format
     t_img = str2double(file(9:10))*3600 +...
-        str2double(file(11:12))*60 +...
-        str2double(file(13:14)); % get time of image taken (in seconds)
+            str2double(file(11:12))*60; % get time of ref image taken (in secs)
     % find experiment elapsed time 
     t = t_img - t_ref; 
 
-    plot(t, grad, 'o')
+    t_arr(i) = t; 
+    grad_arr(i) = grad;
+
+    plot(t, grad, 'ko')
     hold on 
 
 end 
 
 % plot features
-axis tight
+% axis tight
 %legend 
-xlabel("time"); ylabel("d(pixel intensity)/d(unit pixel)");
+xlabel("time (s)"); ylabel("dc/dz (mm-1)");
 
 % show correction factor calculated for each image
 fac_array

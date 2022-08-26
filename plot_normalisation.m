@@ -32,15 +32,15 @@ clc
 % directory containing the folder 
 folder_name = fullfile('../',...
     '1. Fluorescent nanoparticles/',...
-    '17-Aug_5channel_firsttest/'); % INPUT FOLDER NAME
+    '24-Aug 100-100 50nm 1%/'); % INPUT FOLDER NAME
 % count number of images to analyse
 a = dir([folder_name '/*jpg']); 
 N = length(a); % total number of files (including ref)
 
 % define image crop size
-% syntax: [x-coord of bottom left point, y-coord of bottom left point,
+% syntax: [x-coord of upper left point, y-coord of upper left point,
 % width, height]
-crop_size = [120 942 3752 984]; % CHANGE CROP SIZE
+crop_size = [0 1158 4000 930]; % CHANGE CROP SIZE
 % crop_size = [0 0 4000 3000];
 
 % load reference image (t=0)
@@ -49,16 +49,17 @@ ref = imread([folder_name '/' ref_name]);
 ref = imcrop(ref, crop_size); 
 ref = double(im2gray(ref)); % convert to grayscale
 
+
 sum_ref = sum(ref, "all"); % get sum of pixel intensities 
 
 % -- for hour:min:sec format
-% t_ref = str2double(ref_name(9:10))*3600 +...
-%     str2double(ref_name(11:12))*60 +...
-%     str2double(ref_name(13:14)); % get time of ref image taken (in secs)
+t_ref = str2double(ref_name(9:10))*3600 +...
+    str2double(ref_name(11:12))*60 +...
+    str2double(ref_name(13:14)); % get time of ref image taken (in secs)
 
 % -- for hour:min format
-t_ref = str2double(ref_name(9:10))*3600 +...
-    str2double(ref_name(11:12))*60; % get time of ref image taken (in secs)
+% t_ref = str2double(ref_name(9:10))*3600 +...
+%     str2double(ref_name(11:12))*60; % get time of ref image taken (in secs)
 
 
 % for sense check
@@ -95,13 +96,13 @@ for i = 1:N
 
     % find elapsed time of current image
     % -- for hour:min:sec format
-%     t_img = str2double(file(9:10))*3600 +...
-%             str2double(file(11:12))*60 +...
-%             str2double(file(13:14)); % get time of image taken (in seconds)
+    t_img = str2double(file(9:10))*3600 +...
+            str2double(file(11:12))*60 +...
+            str2double(file(13:14)); % get time of image taken (in seconds)
     
     % -- for hour:min format
-    t_img = str2double(file(9:10))*3600 +...
-            str2double(file(11:12))*60; % get time of ref image taken (in secs)
+%     t_img = str2double(file(9:10))*3600 +...
+%             str2double(file(11:12))*60; % get time of ref image taken (in secs)
     
     % find experiment elapsed time 
     t = t_img - t_ref; 
@@ -122,3 +123,5 @@ xlabel("distance in x-direction"); ylabel("normalised intensity");
 fac_array
 chck_array
 
+figure 
+imshow(img,[0 255])

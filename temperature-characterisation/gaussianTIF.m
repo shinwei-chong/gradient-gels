@@ -7,7 +7,7 @@
 % - image size 
 
 % OUTPUT: 
-% - 2D plot of light distribution 
+% - 3D plot of pixel intensity distribution 
 % - matrix of normalisation factor (matrix size = image size)
 
 % Written by: SWC
@@ -42,16 +42,16 @@ end
 
 %% calculate and plot average pixel intensity
 avg_mat = mean(mat,3); 
-% figure
-% surf(avg_mat,'FaceAlpha',0.2,'EdgeAlpha',0.8,'EdgeColor','interp','LineWidth',0.5)
-% colorbar
+figure
+surf(avg_mat,'FaceAlpha',0.2,'EdgeAlpha',0.8,'EdgeColor','interp','LineWidth',0.5)
+colorbar
 
 %% generate normalisation factor matrix
 avg_pix = mean(mat,"all"); % average pixel intensity across whole image
 norm_fac = avg_mat./ avg_pix;
-% figure
-% surf(norm_fac,'FaceAlpha',0.2,'EdgeAlpha',0.8,'EdgeColor','interp','LineWidth',0.5)
-% colorbar
+figure
+surf(norm_fac,'FaceAlpha',0.2,'EdgeAlpha',0.8,'EdgeColor','interp','LineWidth',0.5)
+colorbar
 
 
 

@@ -7,7 +7,7 @@
 % - image size 
 
 % OUTPUT: 
-% - 2D plot of light distribution 
+% - 3D plot of pixel intensity distribution 
 % - matrix of normalisation factor (matrix size = image size)
 
 % Written by: SWC

@@ -9,6 +9,7 @@
 % OUTPUT: 
 % - 3D plot of pixel intensity distribution 
 % - matrix of normalisation factor (matrix size = image size)
+% - 2D plot of pixel intensity distribution along x-direction 
 
 % Written by: SWC
 % version 1.0, 31-Dec-2022
@@ -55,7 +56,14 @@ avg_pix = mean(mat,"all"); % average pixel intensity across whole image
 norm_fac = avg_mat./ avg_pix;
 figure
 surf(norm_fac,'FaceAlpha',0.2,'EdgeAlpha',0.8,'EdgeColor','interp','LineWidth',0.5)
-colorbar
+colorbar; caxis([0.8 1.2])
+
+figure
+norm_fac_avg = mean(norm_fac,1);
+plot(norm_fac_avg); 
+xlabel('x-direction'); ylabel('normalised intensity')
+
+
 
 
 

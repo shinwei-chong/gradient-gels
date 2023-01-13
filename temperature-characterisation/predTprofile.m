@@ -2,12 +2,15 @@
 % microfluidic system based on temperature-dependent fluorescence
 
 % INPUT:
-% - folder name 
+% - folder name of image data at unknown temperature conditions
+% - folder name of image data at reference temperature
+% - measured reference temperature
 % - image size 
-% - normalisation factor matrix (generated from: gaussianTIF.m; gaussianAVI.m)
+% - normalisation factor matrix (.mat file, generated from: gaussianTIF.m OR gaussianAVI.m)
+% - coefficients of calibration curve 
 
 % OUTPUT: 
-% - heat map of temperature profile 
+% - heat map of temperature profile (default color limits: 22-55 degC)
 % - variation in temperature in x-direction (assume temperature variation
 % in x-direction only)
 
@@ -16,7 +19,7 @@
  
 %%%%%%%%%%
 
-% housekeeping 
+% housekeeping
 close all
 clc
 clear
@@ -26,15 +29,15 @@ clear
 % image data of system at unknown temperature
 data_file_name = fullfile('/Volumes/PRJ-grad1',...
     '2. Temperature characterisation - RhoB',...
-    '20221221_600-200_glassslide_multiplelocs/600-200_10x_IN-T3.avi');
+    '20230110_600-200_glassslide_multiplelocs_repeats/rep1_IN_dT.avi');
 
 % image data of system at reference (room) temperature 
 ref_file_name = fullfile('/Volumes/PRJ-grad1',...
     '2. Temperature characterisation - RhoB',...
-    '20221221_600-200_glassslide_multiplelocs/600-200_10x_IN-ref.avi');
+    '20230110_600-200_glassslide_multiplelocs_repeats/rep1_IN_ref.avi');
 
 % measured reference temperature (degC)
-T_ref = 22.4;
+T_ref = 21.5;
 
 % image size [height,width]
 size = [1216,1936];
@@ -79,10 +82,12 @@ norm_fac = norm_fac.norm_fac; %load matrix of correction factor
 corr_mat_ref_avg = mat_ref_avg./ norm_fac;
 
 %check correction quality 
-figure
+% figure
+subplot(2,2,1)
 s1 = surf(mat_ref_avg); s1.EdgeColor = 'none'; 
 title('reference image - uncorrected');
-figure
+% figure
+subplot(2,2,2)
 s2 = surf(corr_mat_ref_avg); s2.EdgeColor = 'none';
 title('reference image - corrected');
 
@@ -130,19 +135,20 @@ predT = A0 + A1.*norm_mat + A2.*norm_mat.^2 + A3.*norm_mat.^3;
 % figure 
 % h = heatmap(predT, 'GridVisible', 'off', 'ColorLimits', [22 40], 'Colormap', jet);
 
-figure 
-h = heatmap(predT, 'GridVisible', 'off', 'ColorLimits', [28 40],'Colormap', jet);
+subplot(2,2,3)
+h = heatmap(predT, 'GridVisible', 'off', 'ColorLimits', [22 55],'Colormap', jet);
 title('estimated temperature profile')
 XLabels = 1:size(2); customXLabels = string(XLabels); % custom x-axis tick marks
-customXLabels(mod(XLabels,100)~=0) = " ";
+customXLabels(mod(XLabels,200)~=0) = " ";
 h.XDisplayLabels = customXLabels;
 YLabels = 1:size(1); customYLabels = string(YLabels); % custom y-axis tick marks
-customYLabels(mod(YLabels,100)~=0) = " ";
+customYLabels(mod(YLabels,200)~=0) = " ";
 h.YDisplayLabels = customYLabels;
 
 % plot temperature variation along x-direction
 dT_x = mean(predT,1);
-figure 
+% figure
+subplot(2,2,4)
 plot(dT_x)
 xlabel('distance in x-direction (pix)'); ylabel('temperature (degC)');
 

@@ -12,6 +12,9 @@
 % - intensity correction factor matrix (NEED TO MANUALLY SAVE THIS AS .MAT
 % FILE FOR USE IN DATA ANALYSIS!!)
 
+% Written by: SWC
+% version 1.0, 19-Jan-2022
+
 clear 
 close all
 clc

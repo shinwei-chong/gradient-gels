@@ -20,9 +20,9 @@
 %%%%%%%%%%
 
 % housekeeping
-% close all
+close all
 clc
-% clear
+clear
 
 %% DEFINE USER INPUT 
 
@@ -31,19 +31,19 @@ clc
 
 data_file_name = fullfile('/Volumes/PRJ-grad1',...
     '2. Temperature characterisation - RhoB',...
-    '4. device characterisation/20230119_600-100_systematicTest_Rep2',...
-    'Test3_100-100_T3.avi');
+    '4. device characterisation/20230117_600-100_fixedposition',...
+    'Test1_7000us_30fps_T1.avi');
 
 % image data of system at reference (room) temperature 
 % ref_file_name ='Z:\2. Temperature characterisation - RhoB\4. device characterisation\20230119_600-100_systematicTest_Rep2\Test2_100-100_ref.avi';
 
 ref_file_name = fullfile('/Volumes/PRJ-grad1',...
     '2. Temperature characterisation - RhoB',...
-    '4. device characterisation/20230119_600-100_systematicTest_Rep2',...
-    'Test3_100-100_ref.avi');
+    '4. device characterisation/20230117_600-100_fixedposition',...
+    'Test1_ref2_7000us_30fps_22-7C.avi');
 
 % measured reference temperature (degC)
-T_ref = 21.9;
+T_ref = 22.7;
 
 % image size [height,width]
 size = [1216,1936];
@@ -54,8 +54,8 @@ size = [1216,1936];
 
 norm_mat_name = fullfile('/Volumes/PRJ-grad1',...
     '2. Temperature characterisation - RhoB',...
-    '4. device characterisation/20230119_600-100_systematicTest_Rep2',...
-    'test3_normfac.mat');
+    '4. device characterisation/20230117_600-100_fixedposition',...
+    'Test1_ref1.mat');
 
 
 
@@ -78,7 +78,7 @@ mat_ref = zeros(size(1), size(2)); %create empty matrix
 % sum pixel intensities across all frames
 for i = 1:n_ref
     im = read(v_ref,i); 
-%     im = im2gray(im);
+    im = im2gray(im);
     im = double(im); %convert to double
     mat_ref = mat_ref + im; 
 end
@@ -118,7 +118,7 @@ mat = zeros(size(1), size(2)); %create empty matrix
 % sum pixel intensities across all frames
 for j = 1:n
     im = read(v,j); 
-%     im = im2gray(im);
+    im = im2gray(im);
     im = double(im); %convert to double
     mat = mat + im; 
 end
@@ -149,7 +149,7 @@ predT = A0 + A1.*norm_mat + A2.*norm_mat.^2 + A3.*norm_mat.^3;
 % h = heatmap(predT, 'GridVisible', 'off', 'ColorLimits', [22 40], 'Colormap', jet);
 
 subplot(2,2,2)
-h = heatmap(predT, 'GridVisible', 'off', 'ColorLimits', [22 55],'Colormap', jet);
+h = heatmap(predT, 'GridVisible', 'off', 'ColorLimits', [30 50],'Colormap', jet);
 title('estimated temperature profile')
 XLabels = 1:size(2); customXLabels = string(XLabels); % custom x-axis tick marks
 customXLabels(mod(XLabels,200)~=0) = " ";

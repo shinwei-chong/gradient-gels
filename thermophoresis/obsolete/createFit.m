@@ -24,8 +24,8 @@ function [fitresult, gof] = createFit(X, Y)
 %% curve fitting
 
 % User-defined inputs
-X = t_arr(1:end-5); % time 
-Y = grad_arr(1:end-5); % gradient 
+X = t_array; % time 
+Y = grad_array; % gradient 
 g = [0.3 0.3 2000]; %intial guess values 
 
 % Prepare data
@@ -51,7 +51,7 @@ YFit = a-b.*exp(-xData./c);
 
 % Plot fit with data.
 % figure( 'Name', 'fitted curve' );
-plot(t_arr, grad_arr, 'bo');
+plot(t_array, grad_array, 'bo');
 hold on
 plot(xData, YFit)
 

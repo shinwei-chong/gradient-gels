@@ -1,5 +1,6 @@
 % SUMAMARY: script file to compute and plot the gradient of pixel intensity
 % with respect to distance (across x-direction of image) over time
+% developed for single gradient (Alex's thesis)
 
 % WORKFLOW:
 % 1) image correction so that the sum of pixel intensity is the same across

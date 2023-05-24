@@ -1,5 +1,6 @@
 % SUMAMARY: script file to perform normalisation of pixel intensity with
 % respect to reference image
+% developed for single gradient (Alex's thesis)
 
 % WORKFLOW:
 % 1) image correction so that the sum of pixel intensity is the same across
